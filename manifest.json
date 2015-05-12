@@ -1,11 +1,11 @@
 {
     "name": "Backlog Task Jumper",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "manifest_version": 2,
     "description": "Useful Backlog Project 01. Quick access to tasks.",
     "content_scripts": [{
         "matches": ["https://*.backlog.jp/*"],
-        "js": ["jquery-1.11.3.min.js","backlog-task-jumper.js"],
+        "js": ["jquery.min.js","backlog-task-jumper.js"],
         "run_at": "document_end"
     }]
 }
