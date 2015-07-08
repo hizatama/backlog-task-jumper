@@ -1,6 +1,9 @@
 # backlog-task-jumper
 [Useful Backlog Project] Enable quick access to tasks.
 
+Google Extension
+https://chrome.google.com/webstore/detail/backlog-task-jumper/ddikljcdkdmpmfihigojehbfdbihppph
+
 # Install
 1. 適当なディレクトリにcloneする
 2. Chromeの拡張機能ページを開く(chrome://extensions/)
@@ -15,6 +18,5 @@
 
 
 # TODO
-- パッケージ化して公開
 - READMEの英語化
 
