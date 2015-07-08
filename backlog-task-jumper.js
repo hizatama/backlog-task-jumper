@@ -4,28 +4,33 @@
  *
  * @author hizatama
  **/
-$(function(){
+jQuery(function($){
 
     // constants ===================================
-    var TASK_URI = '/view/%PJ_NAME%-%TASK_NUMBER%';
+    var ISSUE_URI = '/view/%PJ_NAME%-%ISSUE_ID%';
 
     // variables ===================================
     var pjName = ($("#navi-home").attr("href")||"").replace("/projects/",""),
         protocol = location.protocol,
-        host = location.hostname,
-        replaceMap = {
-            "PJ_NAME":pjName
-        };
+        host = location.hostname;
+
+    var cacheIssues = {};
 
     // exit if can't get projectname
     if(!pjName) return;
-
+  
     // element =====================================
-    var inputBox = $('<input class="btj-input-box" style="position:fixed;top:0;right:0;z-index:1001;display:none;">').appendTo("body");
-
+    var btjWrapper = $('<div id="btj-wrapper" style="display:none;position: fixed;top: 0px;left: 50%;margin-left: -200px;z-index: 1001;width: 400px;background-color: rgba(125, 168, 0, 0.77);text-align: center;padding: 10px;box-sizing: border-box;border-radius: 0 0 5px 5px;">').appendTo("body"),
+        btjInputBox = $('<input type="number" class="btj-input-box" style="width: 100%;box-sizing: border-box;padding: 7px;">').appendTo(btjWrapper),
+        tbjIssueTitle = $('<p id="tbj-issue-title" style="margin-top: 10px;padding: 5px 0;background-color: rgba(249, 248, 227, 0.9);">').appendTo(btjWrapper);
+        
     // functions ===================================
-    var replaceUri = function(str, map){
-            map = $.extend(replaceMap, map);
+    var setIssueUri = function(issueId){
+            var str = ISSUE_URI,
+                map = {
+                    "PJ_NAME":pjName,
+                    'ISSUE_ID':issueId
+                };
             for(var k in map) {
                 str = str.replace("%"+k+"%", map[k], "g");
             }
@@ -39,30 +44,76 @@ $(function(){
             return num;
         },
         openBox = function(){
-            inputBox.val("").show().focus(); 
+            btjWrapper.stop().slideDown(100); 
+            btjInputBox.val("").focus();
         },
         closeBox = function(){
-            inputBox.blur().hide(300);
+            btjWrapper.slideUp(100);
+            btjInputBox.blur();
         },
-        openTask = function(taskNumber) {
-            if(!/^[\d０-９]+$/.test(taskNumber)){
+        isValidIssueId = function(issueId) {
+            return (/^[\d０-９]+$/.test(issueId));
+        },
+        issueUrl = function(issueId) {
+            return protocol+"//"+host+setIssueUri(issueId);
+        },
+        openIssue = function(issueId) {
+            if(!isValidIssueId(issueId)){
                 closeBox();
                 return false;
             }
-            taskNumber = convertZenkakuNumber(taskNumber);
-            location.href = protocol+"//"+host+replaceUri(TASK_URI, {"TASK_NUMBER":taskNumber});
+            issueId = convertZenkakuNumber(issueId);
+            location.href = issueUrl(issueId)
+        },
+        setIssueSummary = function(issueId) {
+            tbjIssueTitle.text('');
+            if(!isValidIssueId(issueId)){
+                return false;
+            }
+            if(cacheIssues[issueId] !== undefined){
+                var issue = cacheIssues[issueId];
+                tbjIssueTitle.html(issue.type + issue.title);
+                return false;
+            }
+            var issueTitle = issueType = '';
+            $.ajax({
+                url : issueUrl(issueId), 
+                success: function(data){
+                    var issuecard = $('#issuecard', data);
+                    issueType = $('.key .issue-type-name', issuecard).get(0).outerHTML;
+                    issueTitle = $('.summary span', issuecard).text();
+                },
+                complete : function(){
+                    cacheIssues[issueId] = {
+                        'title' : issueTitle,
+                        'type' : issueType
+                    };
+                    tbjIssueTitle.html(issueType + issueTitle);
+                }
+            });
+        },
+        setIssueSummary2 = function(issueId){
+
         }
 
     // events =========================================
-    inputBox.on("keydown", function(e){
+    btjInputBox.on("keydown", function(e){
         switch(e.which) {
             case 27: // Esc
                 closeBox();
                 return false;
+        }
+    }).on("keypress", function(e){
+        switch(e.which) {
             case 13: // Enter
-                openTask($(this).val());
+                openIssue($(this).val());
+                return false;
+            case 35: // #
+                closeBox();
                 return false;
         }
+    }).on("keyup", function(e){
+        setIssueSummary($(this).val());
     });
 
     $(window).on("keypress", function(e){
