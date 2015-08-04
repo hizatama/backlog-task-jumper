@@ -64,10 +64,10 @@ jQuery(function($){
             }
             issueId = convertZenkakuNumber(issueId);
             if(newWindow) {
-                var newWin = window.open(issueUrl(issueId),(new Date).getTime());
-                setTimeout(newWin.focus,0);
-            }else {
-                location.href = issueUrl(issueId);
+                window.open(issueUrl(issueId));
+                closeBox();
+            } else {
+                else location.href = issueUrl(issueId);
             }
         },
         setIssueSummary = function(issueId) {
