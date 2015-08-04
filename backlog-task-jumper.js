@@ -57,13 +57,18 @@ jQuery(function($){
         issueUrl = function(issueId) {
             return protocol+"//"+host+setIssueUri(issueId);
         },
-        openIssue = function(issueId) {
+        openIssue = function(issueId, newWindow) {
             if(!isValidIssueId(issueId)){
                 closeBox();
                 return false;
             }
             issueId = convertZenkakuNumber(issueId);
-            location.href = issueUrl(issueId)
+            if(newWindow) {
+                var newWin = window.open(issueUrl(issueId),(new Date).getTime());
+                setTimeout(newWin.focus,0);
+            }else {
+                location.href = issueUrl(issueId);
+            }
         },
         setIssueSummary = function(issueId) {
             tbjIssueTitle.text('');
@@ -105,8 +110,9 @@ jQuery(function($){
         }
     }).on("keypress", function(e){
         switch(e.which) {
+            case 10: 
             case 13: // Enter
-                openIssue($(this).val());
+                openIssue($(this).val(), e.ctrlKey);
                 return false;
             case 35: // #
                 closeBox();
