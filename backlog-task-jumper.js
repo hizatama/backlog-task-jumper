@@ -128,5 +128,7 @@ jQuery(function($){
                 openBox();
                 return false;
         }
+    }).on("click", function(e){
+        if(!btjWrapper.is(e.target) && btjWrapper.has(e.target).size() == 0) closeBox();
     })
 });
