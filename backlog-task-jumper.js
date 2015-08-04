@@ -67,7 +67,7 @@ jQuery(function($){
                 window.open(issueUrl(issueId));
                 closeBox();
             } else {
-                else location.href = issueUrl(issueId);
+                location.href = issueUrl(issueId);
             }
         },
         setIssueSummary = function(issueId) {
