@@ -1,22 +1,17 @@
-# backlog-task-jumper
+# Overview
 [Useful Backlog Project] Enable quick access to tasks.
 
-Google Extension
-https://chrome.google.com/webstore/detail/backlog-task-jumper/ddikljcdkdmpmfihigojehbfdbihppph
+[Backlog](http://www.backlog.jp/)の課題に素早くアクセスするためのChrome拡張機能です。
 
 # Install
-1. 適当なディレクトリにcloneする
-2. Chromeの拡張機能ページを開く(chrome://extensions/)
-3. デベロッパーモードにチェックを入れる
-4. 「パッケージ化されていな拡張機能を読み込む」からclone先を選択する
+https://chrome.google.com/webstore/detail/backlog-task-jumper/ddikljcdkdmpmfihigojehbfdbihppph
 
 # Usage
-1. Backlogの適当なページを開く
-2. 「#」を押す　→　右上にテキストボックスが出てくる
-3. チケット番号を入力してEnterを押す
-4. 課題が開く
+1. Backlogの任意のプロジェクト配下のページを開く
+2. 「#」を押す  
+→画面上部にテキストボックスが出てくる
+3. 課題番号[*1]を入力してEnterを押すと課題が開く  
+(Ctrl+Enterを押すと別タブで課題が開きます)
 
-
-# TODO
-- READMEの英語化
-
+[*1] 課題番号:課題の識別子の数字部分  
+　　　例:「PRJ-NAME-XXXX」のXXXX
