@@ -14,7 +14,8 @@ jQuery(function($){
         protocol = location.protocol,
         host = location.hostname;
 
-    var cacheIssues = {};
+    var cacheIssues = {},
+        issueTimer;
 
     // exit if can't get projectname
     if(!pjName) return;
@@ -37,32 +38,31 @@ jQuery(function($){
             return str;
         },
         convertZenkakuNumber = function(num){
-            var map = {"０":0, "１":1, "２":2, "３":3, "４":4, "５":5, "６":6, "７":7, "８":8, "９":9}
-            for(var k in map) {
-                num = num.replace(k, map[k], "g");
-            }
-            return num;
+            return num.replace(/[０-９]/g, function(s){
+                return String.fromCharCode(s.charCodeAt(0)-0xFEE0);
+            });
         },
         openBox = function(){
-            btjWrapper.stop().slideDown(100); 
-            btjInputBox.val("").focus();
+            tbjIssueTitle.text('');
+            btjWrapper.stop().slideDown(100);
+            btjInputBox.val('').focus();
         },
         closeBox = function(){
             btjWrapper.slideUp(100);
             btjInputBox.blur();
         },
         isValidIssueId = function(issueId) {
-            return (/^[\d０-９]+$/.test(issueId));
+            return (/^[\d]+$/.test(issueId) && issueId > 0);
         },
         issueUrl = function(issueId) {
             return protocol+"//"+host+setIssueUri(issueId);
         },
         openIssue = function(issueId, newWindow) {
+            issueId = convertZenkakuNumber(issueId);
             if(!isValidIssueId(issueId)){
                 closeBox();
                 return false;
             }
-            issueId = convertZenkakuNumber(issueId);
             if(newWindow) {
                 window.open(issueUrl(issueId));
                 closeBox();
@@ -72,6 +72,7 @@ jQuery(function($){
         },
         setIssueSummary = function(issueId) {
             tbjIssueTitle.text('');
+            issueId = convertZenkakuNumber(issueId);
             if(!isValidIssueId(issueId)){
                 return false;
             }
@@ -112,11 +113,18 @@ jQuery(function($){
         switch(e.which) {
             case 10: 
             case 13: // Enter
-                openIssue($(this).val(), e.ctrlKey);
+                openIssue(this.value, e.ctrlKey);
                 return false;
         }
     }).on("keyup", function(e){
-        setIssueSummary($(this).val());
+        if(issueTimer){
+            clearTimeout(issueTimer);
+        }
+        var tv = this.value;
+        issueTimer = setTimeout(function(){
+            setIssueSummary(tv);
+            issueTimer=null;
+        },200);
     });
 
     $(document).on("keypress", function(e){
