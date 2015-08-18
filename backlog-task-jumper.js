@@ -114,21 +114,23 @@ jQuery(function($){
             case 13: // Enter
                 openIssue($(this).val(), e.ctrlKey);
                 return false;
-            case 35: // #
-                closeBox();
-                return false;
         }
     }).on("keyup", function(e){
         setIssueSummary($(this).val());
     });
 
-    $(window).on("keypress", function(e){
+    $(document).on("keypress", function(e){
         switch(e.which) {
             case 35: // #
-                openBox();
-                return false;
+                if($.contains(btjWrapper[0], e.target)){
+                    closeBox();
+                    return false;
+                }else if(!$(e.target).is(':input')){
+                    openBox();
+                    return false;
+                }
         }
     }).on("click", function(e){
-        if(!btjWrapper.is(e.target) && btjWrapper.has(e.target).size() == 0) closeBox();
+        if(!$.contains(btjWrapper[0], e.target)) closeBox();
     })
 });
