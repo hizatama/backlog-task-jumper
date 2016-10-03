@@ -15,3 +15,6 @@ https://chrome.google.com/webstore/detail/backlog-task-jumper/ddikljcdkdmpmfihig
 
 [*1] 課題番号:課題の識別子の数字部分  
 　　　例:「PRJ-NAME-XXXX」のXXXX
+
+# Changelog
+v.0.0.6 fixed ajax error on NewUI(beta).

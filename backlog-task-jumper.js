@@ -17,6 +17,9 @@ jQuery(function($){
     var cacheIssues = {},
         issueTimer;
 
+    // newUI(beta)
+    var isNewUI = $('body').attr('class').indexOf('theme-') !== -1;
+
     // exit if can't get projectname
     if(!pjName) return;
   
@@ -85,9 +88,14 @@ jQuery(function($){
             $.ajax({
                 url : issueUrl(issueId), 
                 success: function(data){
-                    var issuecard = $('#issuecard', data);
-                    issueType = $('.key .issue-type-name', issuecard).get(0).outerHTML;
-                    issueTitle = $('.summary span', issuecard).text();
+                    if(isNewUI) {
+                        issueType = '['+$('.ticket__header .pill', data).removeClass('pill').get(0).outerHTML+'] ';
+                        issueTitle = $('#summary .title-group__title-text', data).text();
+                    }else{ // for OldUI
+                        var issuecard = $('#issuecard', data);
+                        issueType = $('.key .issue-type-name', issuecard).get(0).outerHTML;
+                        issueTitle = $('.summary span', issuecard).text();
+                    }
                 },
                 complete : function(){
                     cacheIssues[issueId] = {
